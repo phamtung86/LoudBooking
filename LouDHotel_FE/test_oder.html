@@ -1,0 +1,1146 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt phòng</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f0f2f5;
+        margin: 0;
+        padding-top: 70px; /* Space for sticky header */
+      }
+
+      /* ===== PREMIUM HEADER ===== */
+      .main-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+      }
+
+      .header-container {
+        max-width: 1100px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .back-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #4b5563;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+
+      .back-btn:hover {
+        background: #f3f4f6;
+        color: #0071c2;
+      }
+
+      .back-btn i {
+        font-size: 16px;
+      }
+
+      .logo-link {
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .logo-text {
+        color: #0071c2;
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+      }
+
+      .nav-item {
+        color: #4b5563;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.2s;
+        cursor: pointer;
+      }
+
+      .nav-item:hover {
+        color: #0071c2;
+      }
+
+      .nav-item i {
+        font-size: 18px;
+      }
+
+      .user-pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 5px 5px 5px 12px;
+        background: #f3f4f6;
+        border-radius: 30px;
+        border: 1px solid #e5e7eb;
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+
+      .user-pill:hover {
+        background: #e5e7eb;
+        border-color: #d1d5db;
+      }
+
+      .user-pill span {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1f2937;
+      }
+
+      .user-pill .mini-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto 40px auto;
+        padding-top: 20px;
+      }
+
+      /* ===== FORM GỘP ===== */
+      .booking-box {
+        display: flex;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
+
+      .left {
+        width: 40%;
+        flex-shrink: 0; /* không bị giãn lại */
+        padding: 10px;
+        overflow: hidden; /* tránh vỡ layout */
+      }
+
+      .right {
+        flex: 1;
+        padding: 15px;
+      }
+
+      /* đường ngăn nét đứt */
+      .left {
+        border-right: 2px dashed #ddd;
+      }
+
+      /* ===== HOTEL ===== */
+      .hotel-img {
+        width: 100%;
+        height: 250px;
+        border-radius: 12px;
+        object-fit: cover;
+      }
+
+      .hotel-name {
+        font-size: 18px;
+        font-weight: 600;
+        margin-top: 10px;
+      }
+
+      .text-gray {
+        margin-top: 5px;
+        color: #6b7280;
+        font-size: 14px;
+      }
+
+      .highlight {
+        color: #16a34a;
+        font-size: 14px;
+        margin-top: 10px;
+      }
+
+      .rating {
+        font-size: 14px;
+        margin-top: 10px;
+      }
+
+      .badge {
+        background: #1d4ed8;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 6px;
+        font-size: 13px;
+        margin-right: 5px;
+      }
+      /* ===== Tiện ích ===== */
+      .amenities {
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* 2 cột */
+        gap: 6px 12px;
+      }
+
+      .amenity {
+        font-size: 14px;
+        color: #374151;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .amenity::before {
+        content: "✔";
+        color: #16a34a; /* xanh đẹp */
+        font-weight: bold;
+      }
+      .more-amenity {
+        font-size: 14px;
+        color: #2563eb; /* xanh nổi hơn */
+        font-weight: 500;
+      }
+
+      /* ❌ chặn dấu ✔ */
+      .more-amenity::before {
+        content: "";
+      }
+      /* ===== ROOM ===== */
+      .room-img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-top: 10px;
+      }
+
+      .room-info {
+        margin-top: 8px;
+        font-size: 14px;
+      }
+
+      /* ===== FORM ===== */
+      .section {
+        margin-bottom: 15px;
+      }
+
+      .section h3 {
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+
+      .user-box {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #eef5ff;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+      }
+
+      .avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+      }
+
+      .input-group {
+        margin-bottom: 10px;
+      }
+
+      .input-group label {
+        font-size: 14px;
+      }
+
+      .input-group input {
+        margin-top: 10px;
+        width: 96%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+
+      .price {
+        color: #0071c2;
+        font-weight: 600;
+      }
+
+      .total {
+        color: #e11d48;
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      .radio-group {
+        font-size: 14px;
+        margin: 10px 0;
+      }
+
+      button {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #0071c2, #0099ff);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .checkbox {
+        font-size: 13px;
+        margin-top: 5px;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid #eee;
+        margin: 10px 0;
+      }
+      /* ===== DATE BOX ===== */
+      .date-box {
+        display: flex;
+        background: #f3f4f6;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 15px;
+      }
+
+      .date-item {
+        flex: 1;
+        padding: 12px;
+      }
+
+      .date-item + .date-item {
+        border-left: 1px solid #ddd;
+      }
+
+      .date-label {
+        font-size: 14px;
+        color: #6b7280;
+      }
+
+      .date-main {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 4px 0;
+      }
+
+      .date-time {
+        font-size: 14px;
+        color: #6b7280;
+      }
+      /* ===== PRICE BOX ===== */
+      .price-box {
+        background: #f9fafb;
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 15px;
+      }
+
+      .price-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .price-row span:first-child {
+        color: #6b7280;
+      }
+
+      .price-main {
+        font-weight: 600;
+      }
+
+      .total-box {
+        border-top: 1px dashed #ddd;
+        margin-top: 10px;
+        padding-top: 10px;
+      }
+
+      .total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .total-label {
+        font-size: 19px;
+        font-weight: 500;
+      }
+
+      .total-price {
+        font-size: 20px;
+        font-weight: bold;
+        color: #e11d48;
+      }
+
+      /* payment */
+      .payment-box {
+        margin-top: 12px;
+      }
+
+      .payment-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 0;
+        font-size: 14px;
+      }
+
+      /* checkbox */
+      .checkbox {
+        margin-top: 20px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        line-height: 1.5;
+      }
+
+      .checkbox label {
+        cursor: pointer;
+        color: #374151;
+      }
+
+      .checkbox a {
+        color: #0071c2;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .checkbox a:hover {
+        text-decoration: underline;
+      }
+      /* ===== PAYMENT STYLE ===== */
+
+      .payment-box {
+        margin-top: 15px;
+      }
+
+      .payment-title {
+        margin-top: 20px;
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .payment-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        margin-top: 20px;
+        padding: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .payment-card:hover {
+        border-color: #0071c2;
+        background: #f0f7ff;
+      }
+
+      .payment-card input {
+        display: none;
+      }
+
+      .payment-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .payment-icon {
+        border-radius: 10px;
+        background: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .payment-icon img {
+        width: 50px;
+        object-fit: contain;
+      }
+
+      .payment-text b {
+        font-size: 14px;
+      }
+
+      .payment-text span {
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      /* trạng thái chọn */
+      .payment-card.active {
+        border-color: #0071c2;
+        background: #eef5ff;
+      }
+
+      /* ===== ROOM LIST SCROLL ===== */
+      #roomList {
+        max-height: 400px; /* chiều cao cố định */
+        overflow-y: auto;
+        padding-right: 5px;
+        padding-bottom: 10px;
+      }
+
+      /* scroll đẹp hơn */
+      #roomList::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      #roomList::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+      }
+
+      /* ===== ROOM ITEM ===== */
+      .room-item {
+        display: flex;
+        gap: 12px;
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+      }
+
+      .room-left {
+        width: 170px;
+        height: 130px;
+        flex-shrink: 0;
+      }
+
+      .room-left img {
+        width: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      .room-right {
+        flex: 1;
+        font-size: 14px;
+      }
+
+      .room-right div {
+        margin-bottom: 3px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="main-header">
+      <div class="header-container">
+        <div class="header-left">
+          <a href="javascript:history.back()" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Quay lại</span>
+          </a>
+          <a href="1home.html" class="logo-link">
+            <span class="logo-text">LoudBooking.com</span>
+          </a>
+        </div>
+
+        <div class="header-right">
+          <div class="nav-item">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span>Liên hệ</span>
+          </div>
+          <div class="nav-item">
+            <i class="fa-regular fa-bell"></i>
+            <span>Thông báo</span>
+          </div>
+          <div class="user-pill">
+            <span id="headerUsername">Vũ Xuân Bắc</span>
+            <img src="https://i.pravatar.cc/100" class="mini-avatar" />
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="booking-box">
+        <!-- LEFT -->
+        <div class="left">
+          <img src="" class="hotel-img" />
+
+          <div style="margin-top: 10px">
+            <div class="hotel-name"></div>
+            <div class="text-gray"></div>
+            <div class="highlight">Vị trí tuyệt vời</div>
+
+            <div class="rating">
+              <span class="badge" id="avgScore">0</span>
+              <span id="ratingLabel">---</span> ·
+              <span id="totalReview">0</span> đánh giá
+            </div>
+            <div class="amenities">
+              <div class="amenity"></div>
+            </div>
+          </div>
+
+          <hr />
+          <div class="date-box" style="margin-bottom: 8px">
+            <div class="date-item" style="flex: 1">
+              <div class="date-label">Danh sách phòng</div>
+            </div>
+          </div>
+
+          <div id="roomList"></div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="right">
+          <div class="user-box">
+            <img src="https://i.pravatar.cc/100" class="avatar" />
+            <div>
+              <div><b></b></div>
+              <div class="text-gray">vuxuanbac@gmail.com</div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2 style="text-align: center; font-size: 20px">
+              Thông tin người đặt phòng
+            </h2>
+
+            <div class="input-group">
+              <label>Tên người đặt</label>
+              <input type="text" id="orderName" />
+            </div>
+
+            <div class="input-group">
+              <label>Số điện thoại người đặt</label>
+              <input type="text" id="orderPhone" />
+            </div>
+
+            <div class="input-group">
+              <label>Email người đặt</label>
+              <input type="email" id="orderEmail" />
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>Chi tiết đặt phòng</h3>
+
+            <div class="date-box">
+              <div class="date-item">
+                <div class="date-label">Nhận phòng</div>
+                <div class="date-main" id="checkInDate"></div>
+                <div class="date-time">14:00 – 00:00</div>
+              </div>
+
+              <div class="date-item">
+                <div class="date-label">Trả phòng</div>
+                <div class="date-main" id="checkOutDate"></div>
+                <div class="date-time">11:00 – 12:00</div>
+              </div>
+            </div>
+            <div class="price-box">
+              <div class="price-row">
+                <span>Số đêm</span>
+                <span class="price-main"></span>
+              </div>
+
+              <div class="total-box">
+                <div class="total-row">
+                  <span class="total-label">Tổng thanh toán</span>
+                  <span class="total-price"></span>
+                </div>
+              </div>
+
+              <div class="payment-box">
+                <div class="payment-title">
+                  <i class="fa-solid fa-wallet"></i> Phương thức thanh toán
+                </div>
+
+                <!-- CASH -->
+                <label class="payment-card active">
+                  <div class="payment-left">
+                    <div class="payment-icon">
+                      <img src="images/pay.png" />
+                    </div>
+
+                    <div class="payment-text">
+                      <b>Thanh toán khi đến nơi</b>
+                      <br />
+                      <span>Thanh toán bằng tiền mặt tại khách sạn</span>
+                    </div>
+                  </div>
+
+                  <input type="radio" name="payment" value="CASH" checked />
+                </label>
+
+                <!-- VNPAY -->
+                <label class="payment-card">
+                  <div class="payment-left">
+                    <div class="payment-icon">
+                      <img src="images/vnpay.jpg" />
+                    </div>
+
+                    <div class="payment-text">
+                      <b>Thanh toán qua VNPAY</b>
+                      <br />
+                      <span>Thanh toán an toàn qua VNPAY</span>
+                    </div>
+                  </div>
+
+                  <input type="radio" name="payment" value="VNPAY" />
+                </label>
+              </div>
+
+              <div class="checkbox">
+                <input type="checkbox" id="agreeTerms" />
+                <label for="agreeTerms">
+                  Tôi đồng ý với các
+                  <a href="#">Điều khoản & Điều kiện</a>,
+                  <a href="#">Chính sách hủy phòng</a>
+                  và xác nhận rằng thông tin đặt phòng là chính xác.
+                </label>
+              </div>
+
+              <button style="margin-top: 25px">Thanh toán</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    const API_URL = "http://localhost:8080";
+
+    const REVIEW_API = API_URL + "/api/reviews";
+
+    let hotelIdGlobal;
+
+    let repayBillId = null;
+    let isRepay = false;
+
+    /* ===== LẤY PARAM ===== */
+    const params = new URLSearchParams(window.location.search);
+
+    let selectedRooms = JSON.parse(localStorage.getItem("selectedRooms")) || [];
+
+    let checkIn = localStorage.getItem("checkIn");
+    let checkOut = localStorage.getItem("checkOut");
+
+    // 🔥 fallback nếu đi bằng URL
+    if (selectedRooms.length === 0) {
+      const roomId = params.get("roomId");
+
+      if (roomId) {
+        selectedRooms = [
+          {
+            roomId: Number(roomId),
+            quantity: 1,
+          },
+        ];
+
+        checkIn = params.get("checkIn");
+        checkOut = params.get("checkOut");
+      }
+    }
+
+    isRepay = params.get("repay") === "true";
+    const guest = params.get("guest") || 1;
+
+    /* ===== FORMAT ===== */
+    function formatDateVN(dateStr) {
+      const [y, m, d] = dateStr.split("-");
+      const date = new Date(y, m - 1, d);
+
+      return date.toLocaleDateString("vi-VN", {
+        weekday: "short",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    }
+
+    function calcNights(start, end) {
+      const s = new Date(start);
+      const e = new Date(end);
+      // nâng lên 1 ngày để tránh lùi do múi giờ
+      const sAdjusted = new Date(s.getTime() + 24 * 60 * 60 * 1000);
+      const eAdjusted = new Date(e.getTime() + 24 * 60 * 60 * 1000);
+
+      return Math.max(1, (eAdjusted - sAdjusted) / (1000 * 60 * 60 * 24));
+    }
+
+    function formatPrice(price) {
+      return price.toLocaleString("vi-VN") + "đ";
+    }
+    async function loadRepayBill() {
+      repayBillId = localStorage.getItem("rePayBillId");
+
+      if (!repayBillId) return;
+
+      const res = await fetch(`${API_URL}/api/bills/${repayBillId}`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      });
+
+      const b = await res.json();
+      const rooms = b.rooms || [];
+
+      localStorage.setItem(
+        "selectedRooms",
+        JSON.stringify(
+          rooms.map((r) => ({
+            roomId: r.roomId,
+            quantity: 1,
+          })),
+        ),
+      );
+      checkIn = b.checkInDate;
+      checkOut = b.checkOutDate;
+
+      document.getElementById("orderName").value = b.orderName;
+      document.getElementById("orderPhone").value = b.orderPhone;
+      document.getElementById("orderEmail").value = b.orderEmail;
+      // mặc định chọn lại VNPAY
+      document.querySelector("input[value='VNPAY']").checked = true;
+
+      await loadBooking();
+    }
+    /* ===== LOAD BOOKING ===== */
+    async function loadBooking() {
+      try {
+        /* ===== ROOM ===== */
+        let totalPrice = 0;
+        const nights = calcNights(checkIn, checkOut);
+
+        const roomListBox = document.getElementById("roomList");
+        roomListBox.innerHTML = "";
+
+        for (const item of selectedRooms) {
+          const res = await fetch(`${API_URL}/api/rooms/${item.roomId}`);
+          const room = await res.json();
+
+          const subtotal = room.price * nights * item.quantity;
+          totalPrice += subtotal;
+
+          // lấy ảnh phòng
+          let roomImg = "https://picsum.photos/200/120";
+
+          if (room.images && room.images.length > 0) {
+            const mainImg =
+              room.images.find((img) => img.main === true) || room.images[0];
+
+            roomImg = API_URL + mainImg.imageUrl;
+          }
+
+          roomListBox.innerHTML += `
+  <div class="room-item">
+    
+    <!-- LEFT IMAGE -->
+    <div class="room-left">
+      <img src="${roomImg}" />
+    </div>
+
+    <!-- RIGHT INFO -->
+    <div class="room-right">
+      <div><b>Phòng:</b> ${room.roomName}</div>
+      <div><b>Loại:</b> ${getRoomTypeVN(room.roomType)}</div>
+      <div><b>Sức chứa:</b> ${room.capacity || "-"} người</div>
+      <div><b>Giá:</b> ${formatPrice(room.price)} / đêm</div>
+      <div><b>Số đêm:</b> ${nights}</div>
+      <div style="color:#e11d48;font-weight:600">
+        <b>Tổng:</b> ${formatPrice(subtotal)}
+      </div>
+    </div>
+
+  </div>
+`;
+        }
+        if (!selectedRooms.length) {
+          throw new Error("selectedRooms rỗng");
+        }
+
+        const firstRoomId = selectedRooms[0].roomId;
+        const first = selectedRooms.find((r) => r.roomId);
+        const roomRes = await fetch(`${API_URL}/api/rooms/${first.roomId}`);
+        const room = await roomRes.json();
+
+        /* ===== HOTEL ===== */
+        hotelIdGlobal = room.hotelId;
+        const hotelRes = await fetch(`${API_URL}/api/hotels/${room.hotelId}`);
+        const hotel = await hotelRes.json();
+
+        /* ===== UTILITIES ===== */
+        const utilRes = await fetch(
+          `${API_URL}/api/hotels/${room.hotelId}/utilities`,
+        );
+        const utilities = await utilRes.json();
+
+        /* ===== REVIEWS ===== */
+        const reviewRes = await fetch(`${REVIEW_API}/hotel/${room.hotelId}`, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        });
+
+        const reviews = await reviewRes.json();
+
+        /* ===== CALC REVIEW ===== */
+        let reviewCount = reviews.length;
+        let sum = 0;
+
+        reviews.forEach((r) => (sum += r.rate));
+
+        let avg = reviewCount > 0 ? sum / reviewCount : 0;
+
+        let label = "Bình thường";
+        if (avg >= 9) label = "Tuyệt vời";
+        else if (avg >= 8) label = "Rất tốt";
+        else if (avg >= 7) label = "Tốt";
+
+        document.getElementById("avgScore").innerText = avg.toFixed(1);
+        document.getElementById("totalReview").innerText = reviewCount;
+        document.getElementById("ratingLabel").innerText = label;
+
+        /* ===== HOTEL ===== */
+        document.querySelector(".hotel-name").innerText = hotel.hotelName;
+
+        // ⚠ FIX: không dùng .text-gray chung chung
+        document.querySelector(".hotel-name").nextElementSibling.innerText =
+          hotel.address;
+
+        /* ===== HOTEL IMAGE ===== */
+        if (hotel.images && hotel.images.length > 0) {
+          const mainImg =
+            hotel.images.find((img) => img.main === true) || hotel.images[0];
+
+          document.querySelector(".hotel-img").src = API_URL + mainImg.imageUrl;
+        } else {
+          document.querySelector(".hotel-img").src =
+            "https://picsum.photos/400/200";
+        }
+
+        /* ===== UTILITIES ===== */
+        const amenityBox = document.querySelector(".amenities");
+        amenityBox.innerHTML = "";
+
+        utilities.slice(0, 7).forEach((u) => {
+          amenityBox.insertAdjacentHTML(
+            "beforeend",
+            `<div class="amenity">${u.name}</div>`,
+          );
+        });
+
+        if (utilities.length > 7) {
+          amenityBox.insertAdjacentHTML(
+            "beforeend",
+            `<div class="more-amenity">+${utilities.length - 7} tiện ích khác</div>`,
+          );
+        }
+
+        /* ===== ROOM ===== */
+
+        function getRoomTypeVN(type) {
+          switch (type) {
+            case "SINGLE":
+              return "Đơn";
+            case "DOUBLE":
+              return "Đôi";
+            case "FAMILY":
+              return "Gia đình";
+            default:
+              return type;
+          }
+        }
+
+        /* ===== DATE ===== */
+        document.getElementById("checkInDate").innerText =
+          formatDateVN(checkIn);
+        document.getElementById("checkOutDate").innerText =
+          formatDateVN(checkOut);
+
+        /* ===== PRICE ===== */
+        document.querySelector(".price-main").innerText = nights;
+
+        document.querySelector(".total-price").innerText =
+          formatPrice(totalPrice);
+      } catch (err) {
+        console.error("Lỗi load booking:", err);
+      }
+    }
+
+    /* ===== USER ===== */
+    function loadUser() {
+      const username = localStorage.getItem("username");
+      const email = localStorage.getItem("email");
+
+      if (username) {
+        document.querySelector(".user-box b").innerText = username;
+        document.getElementById("headerUsername").innerText = username;
+      }
+      if (email) {
+        document.querySelector(".user-box .text-gray").innerText = email;
+      }
+    }
+
+    async function submitBooking() {
+      const name = document.getElementById("orderName").value;
+
+      const phone = document.getElementById("orderPhone").value;
+
+      const email = document.getElementById("orderEmail").value;
+
+      const paymentMethod = document.querySelector(
+        "input[name='payment']:checked",
+      ).value;
+
+      const userId = localStorage.getItem("userId");
+
+      /* ========================CASE REPAY VNPAY ======================== */
+      if (isRepay) {
+        const payRes = await fetch(
+          `${API_URL}/api/payments/vnpay?billId=${repayBillId}`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+          },
+        );
+
+        const paymentUrl = await payRes.text();
+
+        window.location.href = paymentUrl;
+
+        return;
+      }
+
+      /* ========================CASE BOOKING NEW======================== */
+
+      const billRes = await fetch(`${API_URL}/api/bills?userId=${userId}`, {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+
+        body: JSON.stringify({
+          hotelId: hotelIdGlobal,
+
+          rooms: selectedRooms.map((r) => ({
+            roomId: r.roomId,
+            quantity: r.quantity,
+          })),
+
+          checkInDate: checkIn,
+          checkOutDate: checkOut,
+          orderName: name,
+          orderEmail: email,
+          orderPhone: phone,
+          paymentMethod: paymentMethod,
+        }),
+      });
+
+      const bill = await billRes.json();
+
+      if (paymentMethod === "CASH") {
+        window.location.href = "test_qlybill.html";
+
+        return;
+      }
+
+      const payRes = await fetch(
+        `${API_URL}/api/payments/vnpay?billId=${bill.billId}`,
+        {
+          method: "POST",
+
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        },
+      );
+
+      const paymentUrl = await payRes.text();
+
+      window.location.href = paymentUrl;
+    }
+
+    /* chọn card payment */
+    document.querySelectorAll(".payment-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        document
+          .querySelectorAll(".payment-card")
+          .forEach((c) => c.classList.remove("active"));
+
+        card.classList.add("active");
+
+        card.querySelector("input").checked = true;
+      });
+    });
+    /* ===== INIT ===== */
+    document.addEventListener("DOMContentLoaded", async () => {
+      loadUser();
+
+      if (isRepay) {
+        await loadRepayBill();
+      } else {
+        await loadBooking();
+      }
+
+      document.querySelector("button").onclick = submitBooking;
+    });
+  </script>
+</html>

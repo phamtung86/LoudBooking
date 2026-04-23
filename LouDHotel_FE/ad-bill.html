@@ -1,0 +1,1233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin GoatBooking</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .content {
+        margin-left: 260px;
+        padding: 20px;
+        height: 100vh;
+        overflow-y: auto;
+        transition: all 0.3s ease;
+        background: #f4f6f9;
+      }
+      .sidebar {
+        height: 100vh;
+        background: #ffffff;
+        color: #1f2937;
+        position: fixed;
+        width: 260px;
+        overflow-y: auto;
+        transition: all 0.3s ease;
+        border-right: 1px solid #e5e7eb;
+        box-shadow: 2px 0 12px rgba(0, 0, 0, 0.05);
+      }
+
+      .sidebar.collapsed {
+        width: 0;
+        overflow: hidden;
+      }
+
+      /* scrollbar */
+      .sidebar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .sidebar::-webkit-scrollbar-thumb {
+        background-color: #d1d5db;
+        border-radius: 10px;
+      }
+
+      /* title */
+      .sidebar h2 {
+        color: #111827;
+      }
+
+      /* avatar text */
+      .sidebar h2.text-center {
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      /* nav link */
+      .sidebar .nav-link {
+        color: #374151;
+        padding: 10px 14px;
+        border-radius: 10px;
+        margin: 4px 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.2s ease;
+      }
+
+      /* hover */
+      .sidebar .nav-link:hover {
+        background: #f3f4f6;
+        color: #2563eb;
+        transform: translateX(3px);
+      }
+
+      /* active feel */
+      .sidebar .nav-link.active {
+        background: #e0edff;
+        color: #2563eb;
+        font-weight: 600;
+      }
+
+      /* icon size */
+      .sidebar .nav-link i {
+        width: 20px;
+        text-align: center;
+        color: #6b7280;
+      }
+
+      /* hover icon */
+      .sidebar .nav-link:hover i {
+        color: #2563eb;
+      }
+
+      /* submenu */
+      .sidebar .submenu {
+        list-style: none;
+        padding-left: 30px;
+        display: none;
+      }
+
+      .sidebar .submenu .nav-link {
+        font-size: 13px;
+        color: #6b7280;
+        padding: 6px 10px;
+        margin: 2px 7px;
+      }
+
+      .sidebar .submenu .nav-link:hover {
+        background: #f3f4f6;
+        color: #2563eb;
+      }
+      .nav-item .nav-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .content {
+        margin-left: 250px;
+        padding: 20px;
+        transition: margin-left 0.3s; /* Hiệu ứng chuyển đổi khi ẩn/hiện */
+        overflow-y: auto; /* Kích hoạt thanh cuộn dọc */
+        height: 700px;
+      }
+      .content.collapsed {
+        margin-left: 0;
+      }
+      .content::-webkit-scrollbar {
+        width: 8px; /* Độ rộng của thanh cuộn */
+      }
+      .content::-webkit-scrollbar-thumb {
+        background-color: #495057; /* Màu của thanh cuộn */
+        border-radius: 4px;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px;
+        color: #999;
+      }
+    </style>
+    <style>
+      /* ===== ADMIN USER PAGE STYLE ===== */
+
+      section {
+        background: #f4f6f9;
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+
+      /* tiêu đề */
+      h1 {
+        color: #1f2937;
+        font-weight: 700;
+      }
+
+      /* thanh công cụ */
+      .container .btn-primary {
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        border: none;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-weight: 600;
+        transition: 0.2s;
+      }
+
+      .container .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+      }
+
+      /* khung tìm kiếm */
+      .search-box {
+        position: relative;
+        width: 280px;
+      }
+
+      /* input */
+      .search-box input {
+        width: 100%;
+        padding: 10px 42px 10px 14px; /* chừa chỗ cho nút */
+        border-radius: 999px;
+        border: 1px solid #d1d5db;
+        outline: none;
+        transition: 0.2s;
+        font-size: 14px;
+      }
+
+      .search-box input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+      }
+
+      /* nút search nằm trong input */
+      .search-box button {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        border: none;
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .search-box button:hover {
+        transform: translateY(-50%) scale(1.05);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+      }
+
+      /* bảng */
+      .table {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      }
+
+      .table thead {
+        background: linear-gradient(135deg, #089662);
+        color: white;
+      }
+
+      .table th,
+      .table td {
+        vertical-align: middle !important;
+        font-size: 14px;
+      }
+
+      .table tbody tr:hover {
+        background: #f1f5f9;
+        transition: 0.15s;
+      }
+
+      /* button action */
+      .btn-warning {
+        background: #f59e0b;
+        border: none;
+        color: white;
+        border-radius: 6px;
+        padding: 4px 10px;
+      }
+
+      .btn-warning:hover {
+        background: #d97706;
+      }
+
+      .btn-danger {
+        background: #ef4444;
+        border: none;
+        border-radius: 6px;
+        padding: 4px 10px;
+      }
+
+      .btn-danger:hover {
+        background: #dc2626;
+      }
+
+      /* modal */
+      .modal-content {
+        border-radius: 14px;
+        border: none;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      }
+
+      .modal-title {
+        font-weight: 600;
+      }
+
+      .modal-body label {
+        font-weight: 600;
+        font-size: 13px;
+        color: #374151;
+      }
+
+      .modal-body input {
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        padding: 10px;
+      }
+
+      .modal-body input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+      }
+
+      /* modal button */
+      .modal-footer .btn-success {
+        background: linear-gradient(135deg, #16a34a, #22c55e);
+        border: none;
+        border-radius: 8px;
+        padding: 8px 18px;
+        font-weight: 600;
+      }
+
+      .modal-footer .btn-success:hover {
+        box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35);
+      }
+
+      /* responsive */
+      @media (max-width: 768px) {
+        #searchInput {
+          width: 100% !important;
+          margin-top: 10px;
+        }
+      }
+      /* ===== STATUS CHUẨN USER ===== */
+
+      .order-pending {
+        color: #1677ff;
+        font-weight: 600;
+      }
+
+      .order-paid {
+        color: rgb(63, 63, 63);
+        font-weight: 600;
+      }
+
+      .order-cancel {
+        color: #ff4d4f;
+        font-weight: 600;
+      }
+
+      .status-paid {
+        color: #0071c2;
+        font-weight: 600;
+      }
+
+      .status-cod {
+        color: #059c6a;
+        font-weight: 600;
+      }
+
+      /* stay */
+      .stay-booked {
+        color: #1677ff;
+        font-weight: 600;
+      }
+
+      .stay-hold {
+        color: #059c6a;
+        font-weight: 600;
+      }
+
+      .stay-in {
+        color: #722ed1;
+        font-weight: 600;
+      }
+
+      .stay-done {
+        color: rgb(63, 63, 63);
+        font-weight: 600;
+      }
+
+      .stay-noshow {
+        color: #fa8c16;
+        font-weight: 600;
+      }
+      .stay-cancel {
+        color: #ff4d4f;
+        font-weight: 600;
+      }
+    </style>
+    <style>
+      /* Thao tác nút*/
+      .step-line {
+        display: flex;
+        align-items: center;
+        gap: 50px;
+      }
+
+      .step {
+        position: relative;
+        z-index: 2;
+        background: #fff;
+        padding: 8px 16px;
+        border-radius: 20px;
+        border: 2px solid #ccc;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      /* line giữa các step */
+      .step-line .line {
+        flex: 1;
+        height: 3px;
+        background: #d1d5db;
+        z-index: 1;
+      }
+
+      /* bước hiện tại */
+      .step.active {
+        border-color: #2563eb;
+        color: white;
+        background: #2563eb;
+        transform: scale(1.1);
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+      }
+
+      /* bước đã xong */
+      .step.done {
+        border-color: #16a34a;
+        color: #16a34a;
+        background: #f0fdf4;
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+      }
+
+      /* bước lỗi / hủy */
+      .step.cancel {
+        border-color: #dc2626;
+        color: #dc2626;
+      }
+      /* step có thể click */
+      .step.clickable {
+        cursor: pointer;
+        border-color: #2563eb;
+      }
+
+      /* hover chỉ áp dụng cho step hợp lệ */
+      .step.clickable:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+        background: #eff6ff;
+        color: rgb(66, 65, 65);
+      }
+
+      /* step bị disable */
+      .step.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      /* mũi tên giữa các step */
+      .step:not(:last-child)::after {
+        content: "➜";
+        position: absolute;
+        right: -30px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px;
+        color: #9ca3af;
+      }
+      /* ===== BILL DETAIL (GIỐNG MANAGER) ===== */
+      .bill-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .bill-box {
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 12px 15px;
+      }
+
+      .bill-box h4 {
+        margin-bottom: 8px;
+        color: #4a90e2;
+        font-size: 15px;
+      }
+
+      .room-scroll {
+        max-height: 220px;
+        overflow-y: auto;
+      }
+
+      /* scroll phòng */
+      .room-scroll {
+        max-height: 220px;
+        overflow-y: auto;
+        padding-right: 5px;
+      }
+
+      /* total */
+      .total {
+        margin-top: 10px;
+      }
+
+      /* responsive */
+      @media (max-width: 768px) {
+        .bill-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+    <style>
+      /*Lọc */
+      /* màu option trong select */
+      select option.status-paid {
+        color: #0071c2;
+        font-weight: 600;
+      }
+
+      select option.status-cod {
+        color: #059c6a;
+        font-weight: 600;
+      }
+
+      select option.order-pending {
+        color: #1677ff;
+        font-weight: 600;
+      }
+
+      select option.order-paid {
+        color: rgb(63, 63, 63);
+        font-weight: 600;
+      }
+
+      select option.order-cancel {
+        color: #ff4d4f;
+        font-weight: 600;
+      }
+
+      /* stay */
+      select option.stay-booked {
+        color: #1677ff;
+        font-weight: 600;
+      }
+
+      select option.stay-hold {
+        color: #059c6a;
+        font-weight: 600;
+      }
+
+      select option.stay-in {
+        color: #722ed1;
+        font-weight: 600;
+      }
+
+      select option.stay-done {
+        color: rgb(63, 63, 63);
+        font-weight: 600;
+      }
+
+      select option.stay-noshow {
+        color: #fa8c16;
+        font-weight: 600;
+      }
+      select option.stay-cancel {
+        color: #ff4d4f;
+        font-weight: 600;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Toggle submenu display
+        const menuItems = document.querySelectorAll(".nav-item");
+        menuItems.forEach((item) => {
+          item.addEventListener("click", function () {
+            const submenu = this.querySelector(".submenu");
+            if (submenu) {
+              submenu.style.display =
+                submenu.style.display === "none" || submenu.style.display === ""
+                  ? "block"
+                  : "none";
+            }
+          });
+        });
+
+        // Toggle sidebar visibility
+        const toggleButton = document.getElementById("sidebarToggle");
+        const sidebar = document.querySelector(".sidebar");
+        const content = document.querySelector(".content");
+        toggleButton.addEventListener("click", function () {
+          sidebar.classList.toggle("collapsed");
+          content.classList.toggle("collapsed");
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2 class="text-center mb-4" style="font-size: 40px">
+        Dashboard
+        <br />
+      </h2>
+      <img
+        src="images/LoudBooking.png"
+        alt="Profile"
+        class="rounded-circle d-block mx-auto mb-4"
+        style="width: 100px; height: 100px; object-fit: cover"
+      />
+      <h2 class="text-center">Admin</h2>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="ad-dashboard.html">
+            <i class="fas fa-tachometer-alt"></i>Dashboard<i
+              class="fas fa-chevron-down-o"
+            ></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="ad-user.html">
+            <i class="fas fa-users"></i>Quản lý tài khoản<i
+              class="fas fa-chevron-down-o"
+            ></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="ad-hotel.html">
+            <i class="fas fa-hotel"></i>Quản lý khách sạn
+            <i class="fas fa-chevron-down-o"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <i class="fas fa-bed"></i>Quản lý Phòng
+            <i class="fas fa-chevron-down"></i>
+          </a>
+          <ul class="submenu">
+            <li>
+              <a class="nav-link" href="ad-roomtype.html"
+                >◯ Danh sách loại phòng</a
+              >
+            </li>
+            <li>
+              <a class="nav-link" href="ad-room.html">◯ Danh sách phòng</a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <i class="fas fa-concierge-bell"></i>Quản lý tiện ích
+            <i class="fas fa-chevron-down"></i>
+          </a>
+          <ul class="submenu">
+            <li>
+              <a class="nav-link" href="ad-utillity.html"
+                >◯ Danh sách tiện ích</a
+              >
+            </li>
+            <li>
+              <a class="nav-link" href="ad-hotel-util.html"
+                >◯ Tiện ích khách sạn</a
+              >
+            </li>
+            <li>
+              <a class="nav-link" href="ad-room-util.html">◯ Tiện ích phòng</a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="ad-review.html">
+            <i class="fas fa-star-half-alt"></i>Quản lý đánh giá
+            <i class="fas fa-chevron-down-o"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="ad-bill.html">
+            <i class="fas fa-clipboard-list"></i>Quản lý đơn
+            <i class="fas fa-chevron-down-o"></i>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>Đăng xuất<i
+              class="fas fa-chevron-down-o"
+            ></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <nav class="navbar navbar-expand navbar-light bg-light">
+        <button
+          id="sidebarToggle"
+          class="btn btn-outline-secondary mr-2"
+          title="Toggle Sidebar"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+        <a class="navbar-brand" href="ad-dashboard.html">Home</a>
+        <a class="navbar-brand" href="#">Contact</a>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#"
+              ><i class="fas fa-comments"></i
+              ><span class="badge badge-danger">3</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"
+              ><i class="fas fa-bell"></i
+              ><span class="badge badge-warning">15</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-th-large"></i></a>
+          </li>
+        </ul>
+      </nav>
+
+      <section>
+        <div class="container mt-4">
+          <h2 class="mb-4 text-center">
+            <b>Quản Lý Đơn Đặt Phòng</b>
+          </h2>
+
+          <!-- search -->
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 15px;
+            "
+          >
+            <!-- FILTER BUTTON LEFT -->
+            <button class="btn btn-primary" onclick="openFilter()">
+              <i class="fa fa-filter"></i> Bộ lọc
+            </button>
+
+            <!-- SEARCH RIGHT -->
+            <div class="search-box">
+              <input
+                type="text"
+                id="searchBillInput"
+                placeholder="Tìm mã đơn, tên người nhận..."
+                onkeyup="searchBill()"
+              />
+              <button onclick="searchBill()">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- FILTER MODAL -->
+          <div class="modal fade" id="filterModal">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Bộ lọc đơn</h5>
+                  <button class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <label>Thanh toán</label>
+                      <select id="filterPayment" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="VNPAY" class="status-paid">VNPAY</option>
+                        <option value="CASH" class="status-cod">
+                          Tiền mặt
+                        </option>
+                      </select>
+                    </div>
+
+                    <div class="col-md-4">
+                      <label>Bill status</label>
+                      <select id="filterBillStatus" class="form-control">
+                        <option value="">Tất cả</option>
+
+                        <option value="PENDING" class="order-pending">
+                          Chưa thanh toán
+                        </option>
+
+                        <option value="PAID" class="order-paid">
+                          Đã thanh toán
+                        </option>
+
+                        <option value="CANCELED" class="order-cancel">
+                          Đã hủy
+                        </option>
+                      </select>
+                    </div>
+
+                    <div class="col-md-4">
+                      <label>Lưu trú</label>
+
+                      <select id="filterStayStatus" class="form-control">
+                        <option value="">Tất cả</option>
+
+                        <option value="BOOKED" class="stay-booked">
+                          Đã đặt
+                        </option>
+
+                        <option value="HOLD" class="stay-hold">
+                          Giữ phòng
+                        </option>
+
+                        <option value="CHECKED_IN" class="stay-in">
+                          Đang ở
+                        </option>
+
+                        <option value="COMPLETED" class="stay-done">
+                          Đã trả phòng
+                        </option>
+
+                        <option value="NO_SHOW" class="stay-noshow">
+                          Không đến
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="row mt-3">
+                    <div class="col-md-4">
+                      <label>Ngày tạo đơn</label>
+                      <input
+                        type="date"
+                        id="filterCreateDate"
+                        class="form-control"
+                      />
+                    </div>
+
+                    <div class="col-md-4">
+                      <label>Check-in từ</label>
+                      <input
+                        type="date"
+                        id="filterCheckIn"
+                        class="form-control"
+                      />
+                    </div>
+
+                    <div class="col-md-4">
+                      <label>Check-out đến</label>
+                      <input
+                        type="date"
+                        id="filterCheckOut"
+                        class="form-control"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button class="btn btn-secondary" onclick="resetFilter()">
+                    Reset
+                  </button>
+
+                  <button class="btn btn-primary" onclick="applyFilter()">
+                    Áp dụng
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table
+              class="table table-bordered table-hover text-center align-middle"
+            >
+              <thead>
+                <tr>
+                  <th>Mã đơn</th>
+                  <th>Create_at</th>
+                  <th>Order_name</th>
+                  <th>Order_phone</th>
+                  <th>Hotel_name</th>
+                  <th>Check-in</th>
+                  <th>Check-out</th>
+                  <th>Thanh toán</th>
+                  <th>Bill_status</th>
+                  <th>Lưu trú</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody id="billTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <div class="modal fade" id="viewBillModal">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5>Chi tiết đơn</h5>
+              <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body" id="billDetailContent"></div>
+
+            <div class="modal-footer">
+              <button class="btn btn-secondary" data-dismiss="modal">
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        let bills = [];
+        const API = "http://localhost:8080/api/bills";
+        const token = localStorage.getItem("accessToken");
+
+        document.addEventListener("DOMContentLoaded", loadBills);
+
+        async function loadBills() {
+          const res = await fetch(API, {
+            headers: { Authorization: "Bearer " + token },
+          });
+
+          if (!res.ok) {
+            alert("Không tải được danh sách đơn! Lỗi: " + res.status);
+            return;
+          }
+
+          bills = await res.json();
+
+          bills.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+          renderBills();
+        }
+
+        function renderBills(data = bills) {
+          const tbody = document.getElementById("billTableBody");
+          tbody.innerHTML = "";
+          data.forEach((b) => {
+            tbody.innerHTML += `
+            <tr>
+              <td>${b.billCode}</td>
+              <td>${formatDateTime(b.createdAt)}</td>
+              <td>${b.orderName}</td>
+              <td>${b.orderPhone}</td>
+              <td>${b.hotelName}</td>
+              <td>${formatDate(b.checkInDate)}</td>
+              <td>${formatDate(b.checkOutDate)}</td>
+              <td>${formatPayment(b.paymentMethod)}</td>
+              <td>${formatBillStatus(b.billStatus)}</td>
+              <td>${formatStayStatus(b.stayStatus)}</td>
+              <td>
+                 <button class="btn btn-sm btn-outline-info mr-1" onclick="viewBill(${b.billId})" title="Xem đơn">
+                  <i class="fa fa-eye"></i>
+              </td>
+            </tr>`;
+          });
+        }
+
+        function viewBill(id) {
+          const b = bills.find((x) => x.billId === id);
+
+          // 🔥 chuẩn hóa rooms giống manager
+          if (!b.rooms) {
+            b.rooms = [
+              {
+                roomName: b.roomName,
+                roomType: b.roomType,
+                capacity: b.capacity,
+                roomNumber: b.roomNumber,
+                oldPrice: b.oldPrice,
+                nights: b.nights,
+                subtotal: (b.oldPrice || 0) * (b.nights || 0),
+              },
+            ];
+          }
+
+          const roomTotal = b.rooms?.reduce(
+            (sum, r) => sum + (r.subtotal || 0),
+            0,
+          );
+
+          const total = roomTotal + Number(b.extraFee || 0);
+
+          document.getElementById("billDetailContent").innerHTML = `
+
+  <div class="bill-grid">
+
+    <!-- USER -->
+    <div class="bill-box">
+      <h4>Thông tin người đặt</h4>
+      <p><b>Mã đơn:</b> ${b.billCode}</p>
+      <p><b>Tài khoản:</b> ${b.userName || "-"}</p>
+      <p><b>Người nhận:</b> ${b.orderName}</p>
+      <p><b>SĐT:</b> ${b.orderPhone}</p>
+      <p><b>Email:</b> ${b.orderEmail || "-"}</p>
+    </div>
+
+    <!-- HOTEL -->
+    <div class="bill-box">
+      <h4>Khách sạn</h4>
+      <p><b>${b.hotelName}</b></p>
+      <p><b>Địa chỉ:</b> ${b.hotelAddress || "-"}</p>
+      <p><b>Email:</b> ${b.ownerEmail || "-"}</p>
+    </div>
+
+    <!-- TIME -->
+    <div class="bill-box">
+      <h4>Thời gian</h4>
+      <p><b>Ngày đặt:</b> ${formatDateTime(b.createdAt)}</p>
+      <p><b>Check-in:</b> ${formatDate(b.checkInDate)}</p>
+      <p><b>Check-out:</b> ${formatDate(b.checkOutDate)}</p>
+      <p><b>Nhận thực tế:</b> ${formatDateTime(b.actualCheckInTime)}</p>
+      <p><b>Trả thực tế:</b> ${formatDateTime(b.actualCheckOutTime)}</p>
+    </div>
+
+    <!-- ROOM -->
+    <div class="bill-box">
+      <h4>Phòng</h4>
+
+      <div class="room-scroll">
+        ${
+          b.rooms?.length
+            ? b.rooms
+                .map(
+                  (r) => `
+              <div style="padding:8px 0; border-bottom:1px solid #eee">
+                <div><b>Phòng:</b> ${r.roomName}</div>
+                <div><b>Loại:</b> ${r.roomType || "-"}</div>
+                <div><b>Sức chứa:</b> ${r.capacity || "-"} người</div>
+                <div><b>Số phòng:</b> ${r.roomNumber || "-"}</div>
+                <div><b>Giá / đêm:</b> ${formatMoney(r.oldPrice)} đ</div>
+                <div><b>Số đêm:</b> ${r.nights}</div>
+                <div style="color:#e11d48; font-weight:600">
+                  ${formatMoney(r.subtotal)} đ
+                </div>
+              </div>
+            `,
+                )
+                .join("")
+            : "<p>Không có dữ liệu phòng</p>"
+        }
+      </div>
+    </div>
+
+    <!-- STATUS -->
+    <div class="bill-box">
+      <h4>Trạng thái</h4>
+      <p><b>Thanh toán:</b> ${formatPayment(b.paymentMethod)}</p>
+      <p><b>Bill:</b> ${formatBillStatus(b.billStatus)}</p>
+      <p><b>Lưu trú:</b> ${formatStayStatus(b.stayStatus)}</p>
+
+      ${
+        b.billStatus === "CANCELED"
+          ? `<p><b>Lý do hủy:</b>
+              <span style="color:red">
+                ${formatCancelReason(b.cancelReason)}
+              </span>
+            </p>`
+          : ""
+      }
+    </div>
+
+    <!-- COST -->
+    <div class="bill-box">
+      <h4>Chi phí</h4>
+      <p><b>Số đêm:</b> ${b.rooms?.[0]?.nights || 0}</p>
+      <p><b>Tổng tiền phòng:</b> ${formatMoney(roomTotal)} đ</p>
+      <p><b>Phụ phí:</b> ${formatMoney(b.extraFee || 0)} đ</p>
+      <p class="total" style="font-weight:700; font-size:19px; color: ${
+        b.billStatus === "PAID" ? "#16a34a" : "#e11d48"
+      }">
+        Tổng thanh toán: ${formatMoney(total)} đ
+      </p>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <!-- 🔥 ADMIN ONLY VIEW -->
+  
+  `;
+
+          $("#viewBillModal").modal("show");
+        }
+
+        function renderActions(b) {
+          return `
+    <div class="alert alert-info" style="font-size:14px">
+      Admin chỉ có quyền xem thông tin đơn, không được thao tác.
+    </div>
+  `;
+        }
+
+        function formatDate(d) {
+          if (!d) return "";
+          return new Date(d).toISOString().slice(0, 10);
+        }
+
+        function formatDateTime(d) {
+          return d ? d.replace("T", " ").slice(0, 16) : "-";
+        }
+
+        function formatMoney(v) {
+          return Number(v || 0).toLocaleString();
+        }
+
+        function formatPayment(v) {
+          if (v === "CASH") return `<span class="status-cod">Tiền mặt</span>`;
+
+          if (v === "VNPAY") return `<span class="status-paid">VNPAY</span>`;
+
+          return v;
+        }
+
+        function formatBillStatus(v) {
+          switch (v) {
+            case "PENDING":
+              return `<span class="order-pending">
+        Chưa thanh toán
+      </span>`;
+            case "PAID":
+              return `<span class="order-paid">
+        Đã thanh toán
+      </span>`;
+            case "CANCELED":
+              return `<span class="order-cancel">
+        Đã hủy
+      </span>`;
+            default:
+              return v;
+          }
+        }
+
+        function formatStayStatus(v) {
+          switch (v) {
+            case "BOOKED":
+              return `<span class="stay-booked">Đã đặt</span>`;
+            case "HOLD":
+              return `<span class="stay-hold">Giữ phòng</span>`;
+            case "CHECKED_IN":
+              return `<span class="stay-in">Đang ở</span>`;
+            case "COMPLETED":
+              return `<span class="stay-done">Đã trả phòng</span>`;
+            case "NO_SHOW":
+              return `<span class="stay-noshow">Không đến</span>`;
+            case "CANCELED":
+              return `<span class="stay-cancel">Đã hủy</span>`;
+            default:
+              return v;
+          }
+        }
+
+        function formatCancelReason(v) {
+          const map = {
+            HOTEL_CANCEL: "Khách sạn hủy",
+            USER_CANCEL: "Người dùng hủy",
+            NO_SHOW: "Khách không đến nhận phòng sau khi giữ",
+            VNPAY_CANCEL: "Quá hạn thanh toán VNPAY",
+          };
+          return map[v] || "-";
+        }
+
+        function confirmAction(action, id) {
+          if (!confirm("Xác nhận thao tác?")) return;
+
+          fetch(`${API}/${id}/${action}`, {
+            method: "PUT",
+            headers: { Authorization: "Bearer " + token },
+          }).then(() => {
+            $("#viewBillModal").modal("hide");
+            loadBills();
+          });
+        }
+      </script>
+      <script>
+        // Lọc
+        function openFilter() {
+          $("#filterModal").modal("show");
+        }
+        function applyFilter() {
+          const payment = document.getElementById("filterPayment").value;
+          const billStatus = document.getElementById("filterBillStatus").value;
+          const stayStatus = document.getElementById("filterStayStatus").value;
+          const createDate = document.getElementById("filterCreateDate").value;
+          const checkIn = document.getElementById("filterCheckIn").value;
+          const checkOut = document.getElementById("filterCheckOut").value;
+
+          let filtered = bills.filter((b) => {
+            if (payment && b.paymentMethod !== payment) return false;
+            if (billStatus && b.billStatus !== billStatus) return false;
+            if (stayStatus && b.stayStatus !== stayStatus) return false;
+            if (createDate && formatDate(b.createdAt) !== createDate)
+              return false;
+            if (checkIn && b.checkInDate.slice(0, 10) < checkIn) return false;
+            if (checkOut && b.checkOutDate.slice(0, 10) > checkOut)
+              return false;
+            return true;
+          });
+          // sort mới nhất lên đầu
+          filtered.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+          );
+
+          renderBills(filtered);
+          $("#filterModal").modal("hide");
+        }
+        function resetFilter() {
+          document.getElementById("filterPayment").value = "";
+          document.getElementById("filterBillStatus").value = "";
+          document.getElementById("filterStayStatus").value = "";
+          document.getElementById("filterCreateDate").value = "";
+          document.getElementById("filterCheckIn").value = "";
+          document.getElementById("filterCheckOut").value = "";
+          // sort lại
+          bills.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+          renderBills(bills);
+        }
+      </script>
+
+      <div class="footer">
+        <p>Copyright © VXB-2026 AdminDashboard. All rights reserved.</p>
+        <p>Version 8.8.4-rc</p>
+      </div>
+    </div>
+  </body>
+</html>

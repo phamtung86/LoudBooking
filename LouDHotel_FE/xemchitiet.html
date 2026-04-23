@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chi tiết khách sạn</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .hotel-detail {
+        position: relative; /* cần để icon position: absolute */
+        display: flex;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 850px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        gap: 20px;
+      }
+
+      .home-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        color: #1976d2;
+        text-decoration: none;
+      }
+
+      .home-icon:hover {
+        color: #0d47a1;
+      }
+
+      /* --- Bên trái: hình ảnh --- */
+      .hotel-images {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 50%;
+      }
+
+      .main-image {
+        width: 100%;
+        height: 260px;
+        object-fit: cover;
+        border-radius: 8px;
+        background: #ddd;
+      }
+
+      .sub-images {
+        display: flex;
+        gap: 10px;
+      }
+
+      .sub-images img {
+        flex: 1;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 6px;
+        background: #ccc;
+      }
+
+      /* --- Bên phải: thông tin khách sạn --- */
+      .hotel-info {
+        width: 50%;
+      }
+
+      .hotel-info h2 {
+        margin: 0 0 5px 0;
+        font-size: 22px;
+      }
+
+      .hotel-info p {
+        margin: 4px 0;
+        color: #333;
+      }
+
+      .hotel-info ul {
+        margin: 5px 0 0 20px;
+      }
+
+      /* --- Khung mô tả --- */
+      .description-box {
+        width: 850px;
+        background: #fff;
+        margin-top: 15px;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .description-box h3 {
+        margin-top: 0;
+        color: #0078d7;
+      }
+
+      .description-box p {
+        text-align: justify;
+        line-height: 1.5;
+        color: #333;
+      }
+
+      /* --- Bảng phòng --- */
+      h3 {
+        margin-top: 25px;
+        color: #333;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+      }
+
+      th {
+        background-color: #005fa3;
+        color: white;
+      }
+
+      .anhBangPhong {
+        width: 100px; /* Hoặc 50%, tùy nhu cầu */
+        height: auto; /* Giữ tỷ lệ */
+        display: block; /* Để ảnh nằm giữa ô nếu cần */
+        margin: 0 auto; /* Căn giữa ảnh trong ô */
+      }
+
+      .btn-book {
+        background-color: #003580;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        cursor: pointer;
+        border-radius: 3px;
+      }
+
+      .btn-book:hover {
+        background-color: #007bb8;
+      }
+
+      /* --- Đánh giá --- */
+      .review-section {
+        margin-top: 25px;
+      }
+
+      .review-summary {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 16px;
+      }
+
+      .score-box {
+        background-color: #003580;
+        color: white;
+        padding: 6px 10px;
+        border-radius: 4px;
+        font-weight: bold;
+      }
+
+      .review-table {
+        margin-top: 15px;
+      }
+
+      .btn-review {
+        margin-top: 10px;
+        background-color: #003580;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .btn-review:hover {
+        background-color: #005fa3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hotel-detail">
+      <!-- Bên trái: hình ảnh -->
+      <div class="hotel-images">
+        <img src="" alt="Ảnh chính" class="main-image" />
+        <div class="sub-images"></div>
+      </div>
+
+      <!-- Bên phải: thông tin khách sạn -->
+      <div class="hotel-info">
+        <!-- Thông tin sẽ được load bằng JS -->
+      </div>
+
+      <!-- Icon Home góc trên phải -->
+      <a href="Home_User.html" class="home-icon" title="Trang chủ">
+        <i class="fas fa-house"></i>
+      </a>
+    </div>
+
+    <!-- Khung mô tả -->
+    <div class="description-box">
+      <h3>Mô tả khách sạn</h3>
+      <p></p>
+    </div>
+
+    <!-- Phần phòng trống -->
+    <div
+      style="
+        width: 850px;
+        background: #fff;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      "
+    >
+      <h3>Phòng trống</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Mã phòng</th>
+            <th>Ảnh phòng</th>
+            <th>Loại phòng</th>
+            <th>Số người</th>
+            <th>Diện tích</th>
+            <th>Giá (VND)</th>
+            <th>Trạng thái</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <!-- Đánh giá -->
+      <div class="review-section">
+        <h3>Đánh giá của khách</h3>
+        <div class="review-summary">
+          <div class="score-box">0</div>
+          <span>- 0 đánh giá</span>
+        </div>
+        <h3>Các đánh giá nổi bật</h3>
+        <!-- Bảng đánh giá -->
+        <table class="review-table">
+          <thead>
+            <tr>
+              <th>Nội dung đánh giá</th>
+              <th>Điểm đánh giá</th>
+            </tr>
+          </thead>
+          <tbody id="review-tbody"></tbody>
+        </table>
+
+        <button class="btn-review" onclick="goToReview()">Đánh giá</button>
+      </div>
+    </div>
+
+    <script>
+      const hotelApiUrl = "http://localhost:8080/api/khachsan";
+      const roomApiUrl = "http://localhost:8080/api/phong";
+
+      // --- Lấy maKS từ URL ---
+      const params = new URLSearchParams(window.location.search);
+      const maKS = params.get("maKS");
+
+      // --- Hàm chuyển sang trang đánh giá ---
+      function goToReview() {
+        if (!maKS) {
+          alert("Không xác định được khách sạn!");
+          return;
+        }
+        sessionStorage.setItem("selectedHotelId", maKS);
+        window.location.href = "PhieuDanhGia.html";
+      }
+
+      async function loadHotelDetail() {
+        if (!maKS) return;
+
+        try {
+          // Load thông tin khách sạn
+          const res = await fetch(`${hotelApiUrl}/${maKS}`);
+          const ks = await res.json();
+
+          /* ================================
+           THÊM: LẤY ĐÁNH GIÁ & TÍNH ĐIỂM TB
+      ================================== */
+          try {
+            const reviewRes = await fetch(
+              `http://localhost:8080/api/danhgia/khachsan/${maKS}`,
+            );
+            const reviews = await reviewRes.json();
+
+            if (reviews.length > 0) {
+              const avg =
+                reviews.reduce((sum, r) => sum + r.soDiem, 0) / reviews.length;
+              ks.diemTB = avg.toFixed(1);
+            } else {
+              ks.diemTB = 0;
+            }
+          } catch (e) {
+            ks.diemTB = 0;
+          }
+
+          // Hình ảnh
+          const mainImageEl = document.querySelector(
+            ".hotel-images .main-image",
+          );
+          const subImagesEl = document.querySelector(".sub-images");
+
+          mainImageEl.src = ks.hinhAnh
+            ? `data:image/png;base64,${ks.hinhAnh}`
+            : "";
+
+          subImagesEl.innerHTML = "";
+          if (ks.hinhAnhPhu && ks.hinhAnhPhu.length > 0) {
+            ks.hinhAnhPhu.forEach((img) => {
+              const imgEl = document.createElement("img");
+              imgEl.src = `data:image/png;base64,${img}`;
+              imgEl.addEventListener(
+                "click",
+                () => (mainImageEl.src = imgEl.src),
+              );
+              subImagesEl.appendChild(imgEl);
+            });
+          }
+
+          // Thông tin khách sạn
+          const hotelInfoEl = document.querySelector(".hotel-info");
+          hotelInfoEl.innerHTML = `
+        <h2>${ks.tenKhachSan}</h2>
+        <p><b>Địa chỉ:</b> ${ks.diaChi}</p>
+        <p><b>Đánh giá:</b> ${ks.diemTB}/10</p>
+        <p><b>Tiện ích:</b></p>
+        <ul>
+          ${
+            ks.tienIch
+              ? ks.tienIch
+                  .split(",")
+                  .map((t) => `<li>${t}</li>`)
+                  .join("")
+              : ""
+          }
+        </ul>
+      `;
+
+          // Mô tả
+          document.querySelector(".description-box p").textContent =
+            ks.gioiThieu || "Chưa có mô tả cho khách sạn này.";
+
+          // Load phòng
+          const tbodyEl = document.querySelector("table tbody");
+          tbodyEl.innerHTML = "";
+          const roomRes = await fetch(`${roomApiUrl}/khachsan/${maKS}`);
+          const rooms = await roomRes.json();
+
+          if (rooms && rooms.length > 0) {
+            rooms.forEach((p) => {
+              const tr = document.createElement("tr");
+              // Nếu phòng đã thuê thì không tạo nút đặt
+              const bookBtn =
+                p.trangThai === "DaThue"
+                  ? ""
+                  : `<button class="btn-book" onclick="window.location.href='PhieuDatPhong.html?maPhong=${p.maPhong}'">Đặt phòng</button>`;
+
+              tr.innerHTML = `
+                <td>${p.maPhong}</td>
+                <td>${
+                  p.hinhAnh
+                    ? p.hinhAnh
+                        .split(";")
+                        .map(
+                          (url) =>
+                            `<img class="anhBangPhong" src="data:image/png;base64,${url}" />`,
+                        )
+                        .join("")
+                    : ""
+                }</td>
+                <td>${p.loaiPhong}</td>
+                <td>${p.soNguoi}</td>
+                <td>${p.dienTich}</td>
+                <td>${parseInt(p.giaPhong).toLocaleString()}</td>
+                <td style="color: ${
+                  p.trangThai === "DaThue" ? "blue" : "black"
+                }">
+                  ${p.trangThai === "Trong" ? "Trống" : "Đã thuê"}
+                </td>
+                <td>${bookBtn}</td>
+              `;
+              tbodyEl.appendChild(tr);
+            });
+          }
+
+          // Load đánh giá riêng
+          const reviewRes = await fetch(
+            `http://localhost:8080/api/danhgia/khachsan/${maKS}`,
+          );
+          const reviews = await reviewRes.json();
+
+          const reviewTbodyEl = document.getElementById("review-tbody");
+          reviewTbodyEl.innerHTML = "";
+          if (reviews && reviews.length > 0) {
+            reviews.forEach((dg) => {
+              const tr = document.createElement("tr");
+              tr.innerHTML = `<td>${dg.noiDung}</td><td>${dg.soDiem}</td>`;
+              reviewTbodyEl.appendChild(tr);
+            });
+
+            // Cập nhật score box
+            const scoreBoxEl = document.querySelector(
+              ".review-summary .score-box",
+            );
+            const reviewCountEl = document.querySelector(
+              ".review-summary span",
+            );
+            const totalScore =
+              reviews.reduce((sum, r) => sum + r.soDiem, 0) / reviews.length;
+            scoreBoxEl.textContent = totalScore.toFixed(1);
+            reviewCountEl.textContent = `- ${reviews.length} đánh giá`;
+          }
+        } catch (err) {
+          console.error("Lỗi load chi tiết khách sạn:", err);
+        }
+      }
+
+      window.onload = loadHotelDetail;
+    </script>
+  </body>
+</html>
