@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin LoudBooking</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        overflow: hidden; /* Loại bỏ thanh cuộn của toàn bộ trang */
+        max-height: 100%;
+      }
+      .sidebar {
+        height: 100vh;
+        background-color: #343a40;
+        color: #fff;
+        position: fixed;
+        width: 250px;
+        overflow-y: auto; /* Kích hoạt thanh cuộn dọc */
+        transition: width 0.3s; /* Hiệu ứng chuyển đổi khi ẩn/hiện */
+      }
+      .sidebar.collapsed {
+        width: 0;
+        overflow: hidden;
+      }
+      .sidebar::-webkit-scrollbar {
+        width: 8px; /* Độ rộng của thanh cuộn */
+      }
+      .sidebar::-webkit-scrollbar-thumb {
+        background-color: #495057; /* Màu của thanh cuộn */
+        border-radius: 4px;
+      }
+      .sidebar a,
+      .sidebar h2 {
+        color: #fff;
+        text-decoration: none;
+      }
+      .sidebar a:hover {
+        background-color: #495057;
+      }
+      .sidebar .submenu {
+        list-style: none;
+        padding-left: 20px;
+        display: none;
+      }
+      .sidebar .submenu .nav-link {
+        font-size: 14px;
+        padding: 5px 20px;
+        color: #adb5bd;
+      }
+      .sidebar .submenu .nav-link:hover {
+        background-color: #495057;
+      }
+      .sidebar .badge-info {
+        background-color: #17a2b8;
+      }
+      .sidebar .badge-danger {
+        background-color: #dc3545;
+      }
+      .nav-item .nav-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .content {
+        margin-left: 250px;
+        padding: 20px;
+        transition: margin-left 0.3s; /* Hiệu ứng chuyển đổi khi ẩn/hiện */
+        overflow-y: auto; /* Kích hoạt thanh cuộn dọc */
+        height: 700px;
+      }
+      .content.collapsed {
+        margin-left: 0;
+      }
+      .content::-webkit-scrollbar {
+        width: 8px; /* Độ rộng của thanh cuộn */
+      }
+      .content::-webkit-scrollbar-thumb {
+        background-color: #495057; /* Màu của thanh cuộn */
+        border-radius: 4px;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px;
+        color: #999;
+      }
+    </style>
+    <style>
+      section {
+        padding: 20px;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Toggle submenu display
+        const menuItems = document.querySelectorAll(".nav-item");
+        menuItems.forEach((item) => {
+          item.addEventListener("click", function () {
+            const submenu = this.querySelector(".submenu");
+            if (submenu) {
+              submenu.style.display =
+                submenu.style.display === "none" || submenu.style.display === ""
+                  ? "block"
+                  : "none";
+            }
+          });
+        });
+
+        // Toggle sidebar visibility
+        const toggleButton = document.getElementById("sidebarToggle");
+        const sidebar = document.querySelector(".sidebar");
+        const content = document.querySelector(".content");
+        toggleButton.addEventListener("click", function () {
+          sidebar.classList.toggle("collapsed");
+          content.classList.toggle("collapsed");
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2 class="text-center mb-4" style="font-size: 40px">
+        Ngọc Lam Hồng
+        <br />
+      </h2>
+      <img
+        src="image.png"
+        alt="Profile"
+        class="rounded-circle mx-auto d-block mb-4"
+        width="100"
+      />
+      <h2 class="text-center">Admin</h2>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="ad-user.html">
+            <i class="fas fa-sign-out-alt"></i>Quản lý người dùng<i
+              class="fas fa-chevron-down-o"
+            ></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="ad-hotel.html">
+            <i class="fas fa-sign-out-alt"></i>Quản lý khách sạn
+            <i class="fas fa-chevron-down-o"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="ad-room.html">
+            <i class="fas fa-sign-out-alt"></i>Quản lý phòng
+            <i class="fas fa-chevron-down-o"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <i class="fas fa-sign-out-alt"></i>Quản lý tiện ích
+            <i class="fas fa-chevron-down-o"></i>
+          </a>
+          <ul class="submenu">
+            <li>
+              <a class="nav-link" href="ad-utillity.html"
+                >◯ Danh sách tiện ích</a
+              >
+            </li>
+            <li>
+              <a class="nav-link" href="ad-hotel-util.html"
+                >◯ Tiện ích khách sạn</a
+              >
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="ad-review.html">
+            <i class="fas fa-sign-out-alt"></i>Quản lý đánh giá
+            <i class="fas fa-chevron-down-o"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="ad-bill.html">
+            <i class="fas fa-sign-out-alt"></i>Quản lý đơn
+            <i class="fas fa-chevron-down-o"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>Đăng xuất<i
+              class="fas fa-chevron-down-o"
+            ></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <nav class="navbar navbar-expand navbar-light bg-light">
+        <button
+          id="sidebarToggle"
+          class="btn btn-outline-secondary mr-2"
+          title="Toggle Sidebar"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+        <a class="navbar-brand" href="dashboard.html">Home</a>
+        <a class="navbar-brand" href="#">Contact</a>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#"
+              ><i class="fas fa-comments"></i
+              ><span class="badge badge-danger">3</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"
+              ><i class="fas fa-bell"></i
+              ><span class="badge badge-warning">15</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-th-large"></i></a>
+          </li>
+        </ul>
+      </nav>
+
+      <section>
+        <div class="container mt-4">
+          <h2 class="mb-4" style="text-align: center">
+            <b>Quản Lý Sản Phẩm</b>
+          </h2>
+        </div>
+      </section>
+      <div class="footer">
+        <p>Copyright © VXB-2026 AdminDashboard. All rights reserved.</p>
+        <p>Version 8.8.4-rc</p>
+      </div>
+    </div>
+  </body>
+</html>

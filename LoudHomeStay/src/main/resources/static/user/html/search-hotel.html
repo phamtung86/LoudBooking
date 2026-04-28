@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tìm chỗ nghỉ tiếp theo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <!-- Thêm Font Awesome -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f0f0f0;
+      }
+      /*header*/
+      header{
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        background:transparent;
+        padding:20px;
+        color:white;
+        z-index:10;
+        }
+      .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 25px;   /* thêm dòng này */
+        }
+
+      .logo h1 {
+        font-size: 24px;
+      }
+      .options a {
+        text-decoration: none;
+        color: rgb(255, 255, 255);
+      }
+      .options {
+        margin-top: 30px;
+        text-align: center;
+      }
+
+     .options button {
+        background-color: transparent;
+        border: 2px solid transparent;   /* có sẵn border nhưng trong suốt */
+        color: white;
+        margin: 0 10px;
+        font-size: 23px;
+        cursor: pointer;
+        width: 196px;
+        padding: 8px 12px;
+        border-radius: 30px;
+        transition: background-color 0.2s;
+        }
+
+        .options button:hover {
+        background-color: rgba(255, 255, 255, 0.2); /* chỉ đổi nền */
+        }
+        
+        .options button i{
+  font-size: 22px;
+  margin-right: 8px;
+  opacity: 0.9;
+}
+    .login-section {
+    margin-right: -30px;
+    display: flex;
+    align-items: center;
+    position: relative; /* Để dropdown menu có thể được định vị chính xác */
+    }
+
+    .main-button {
+        background-color: #0071c2; /* Màu nền nút chính */
+        color: white; /* Màu chữ */
+        border: none; /* Không đường viền */
+        padding: 10px 15px; /* Khoảng cách bên trong */
+        border-radius: 5px; /* Bo tròn các góc */
+        display: flex; /* Để căn giữa biểu tượng và văn bản */
+        align-items: center;
+        cursor: pointer; /* Con trỏ chuột khi di chuột qua */
+        transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+    }
+
+    .main-button:hover {
+        background-color: #0056b3; /* Màu nền khi di chuột qua */
+    }
+
+    .dropdown-menu {
+        display: none; /* Ẩn menu ban đầu */
+        position: absolute; /* Để menu nằm phía dưới nút */
+        background-color: white; /* Màu nền của menu */
+        border: 1px solid #ccc; /* Đường viền */
+        border-radius: 5px; /* Bo tròn các góc */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Đổ bóng */
+        z-index: 1000; /* Đảm bảo menu nằm trên các phần tử khác */
+        margin-top: 220px; /* Khoảng cách giữa nút và menu */
+        width: 150px; /* Đặt chiều rộng cố định cho menu */
+    }
+
+    .dropdown-button {
+        display: block; /* Để các nút trong menu xếp chồng lên nhau */
+        padding: 10px; /* Khoảng cách bên trong */
+        border: none; /* Không đường viền */
+        background-color: transparent; /* Màu nền trong suốt */
+        color: #333; /* Màu chữ */
+        text-align: left; /* Căn trái chữ */
+        border-radius: 5px; /* Bo tròn các góc */
+        cursor: pointer; /* Con trỏ chuột khi di chuột qua */
+        transition: background-color 0.3s, color 0.3s; /* Hiệu ứng chuyển màu */
+    }
+
+    .dropdown-button:hover {
+        background-color: #f0f0f0; /* Màu nền khi di chuột qua */
+        color: #007bff; /* Thay đổi màu chữ khi di chuột qua */
+    }
+
+    .currency-contact {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 55%;
+    }
+
+    .currency-contact select {
+    background-color: #003580;
+    border: none;
+    color: white;
+    margin-right: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    }
+
+    .currency-contact .contact i {
+    margin-right: 5px; /* Thêm khoảng cách giữa biểu tượng và văn bản */
+    }
+
+    .currency-contact .thongbao i {
+    margin-right: 5px; /* Thêm khoảng cách giữa biểu tượng và văn bản */
+    }
+    .thongbao a {
+    text-decoration: none;
+    color: aliceblue;
+    }
+    .contact a {
+    text-decoration: none;
+    color: aliceblue;
+    }
+    .currency-contact .thongbao,
+    .currency-contact .contact{
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    padding:8px 12px;
+    border-radius:30px;
+    transition:background-color 0.2s;
+    }
+
+    .currency-contact .thongbao:hover,
+    .currency-contact .contact:hover{
+    background-color:rgba(255,255,255,0.2);
+    }
+      /*section*/
+    .search-section{
+  color:white;
+  text-align:left;
+  padding:90px 20px 120px 20px;
+
+  position:relative;   /* quan trọng */
+
+  background-image:
+  linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+  url("images/section8.jpg");
+
+  background-size:cover;
+  background-position:center 77%;
+}
+    
+      .search-container {
+        max-width: 900px;
+        margin: 15px auto 0 auto;
+      }
+
+      .search-container h20 {
+        font-size: 50px;
+        margin-bottom: 10px;
+      }
+
+      .search-container p {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+     .search-form{
+      margin-top:10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background-color:white;
+      padding:15px;
+      border-radius:5px;
+      box-shadow:0 4px 8px rgba(0,0,0,0.15);
+
+      position:absolute;
+      bottom: -35px;      /* phần đè xuống dưới ảnh */
+      left:50%;
+      transform:translateX(-50%);
+      width:900px;
+
+      border:3px solid #febb02;   /* viền vàng giống hình */
+    }
+
+      .search-input,
+      .date-input,
+      .guest-control,
+      .search-btn {
+        padding: 10px;
+        border: none;
+        border-radius: 3px;
+        font-size: 16px;
+      }
+
+      .search-input {
+        flex: 2;
+      }
+
+      .date-input {
+        flex: 1;
+        margin-right: 10px;
+      }
+
+      .guest-control {
+        flex: 1.5;
+        position: relative;
+        margin-right: 10px;
+      }
+
+      .guest-control input {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: center;
+      }
+
+      .search-btn {
+        background-color: #0071c2;
+        color: white;
+        cursor: pointer;
+        flex: 0.5;
+        margin-left: 10px;
+      }
+      .search-btn a {
+        text-decoration: none;
+        color: white;
+      }
+      .search-btn:hover {
+        background-color: #034cc1;
+      }
+      .guests-popup {
+        position: absolute;
+        top: 50px;
+        background-color: white;
+        color: black;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        border-radius: 5px;
+        z-index: 1;
+        width: 350px;
+        display: none;
+      }
+
+      .guests-popup div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .guests-popup button {
+        background-color: #0071c2;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+    </style>
+
+    <style>
+      .body1 {
+      font-family: Inter;
+      margin-top: 5%;
+    }
+
+    /* top bar */
+    .hotel-header {
+      margin-bottom: 6px;
+    }
+
+    .hotel-header h3 {
+      font-size: 18px;
+      margin: 0;
+    }
+    .hotel-page {
+      width: 70%;
+      margin: 0 auto;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .result b {
+      font-size: 22px;
+    }
+
+    .result span {
+      color: #555;
+      font-size: 14px;
+    }
+
+    .hotel-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #e5e5e5;
+      overflow: hidden;
+      transition: 0.2s;
+    }
+
+    .hotel-card:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+    .list-view .hotel-card {
+      display: flex;
+    }
+
+    .list-view img {
+      width: 270px;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .view-buttons button {
+      border: none;
+      background: #e8f1ff;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .hotel-info {
+      flex: 1;
+      padding: 16px;
+    }
+
+    .hotel-info h3 {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .rating {
+      color: #003580;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .address {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .desc {
+      color: #555;
+      font-size: 14px;
+    }
+    .price-box {
+      width: 200px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      border-left: 1px solid #eee;
+    }
+
+    .price {
+      color: #ff5a1f;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .price-range {
+      font-size: 13px;
+      color: #777;
+      margin-top: 3px;
+    }
+
+    .book-btn {
+      background: #ff5a1f;
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    /*Dọc*/
+
+    .grid-view .hotel-card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .grid-view img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .grid-view .hotel-info {
+      padding: 14px;
+    }
+
+    .grid-view .price-box {
+      width: 100%;
+      border-left: none;
+      border-top: 1px solid #eee;
+      align-items: flex-start;
+    }
+    /**/
+    .view-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .view-buttons button {
+      border: none;
+      background: #e8f1ff;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .view-buttons button:hover {
+      background: #d6e6ff;
+    }
+
+    /* container */
+
+    .hotel-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* LIST VIEW ngang*/
+
+    .list-view .hotel-card {
+      display: flex;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .list-view img {
+      width: 260px;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .hotel-info {
+      flex: 1;
+      padding: 15px;
+    }
+
+    .list-view .hotel-info {
+      position: relative;
+    }
+
+    .list-view .hotel-header {
+      display: block;
+    }
+
+    .list-view .rating-box {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+    }
+    /**/
+    .rating {
+      color: #003580;
+      font-weight: 600;
+      margin: 5px 0;
+    }
+    .rating-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rating-score {
+      background: #003580;
+      color: white;
+      font-weight: 700;
+      padding: 6px 9px;
+      border-radius: 6px 6px 6px 0;
+      font-size: 14px;
+    }
+
+    .rating-level {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .rating-count {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .address {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .desc {
+      margin-top: 6px;
+      color: #555;
+    }
+
+    /* price */
+
+    .price-box {
+      width: 180px;
+      padding: 15px;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .price {
+      color: #ff5a1f;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .book-btn {
+      background: #003580;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* GRID VIEW */
+
+    .grid-view {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .grid-view .hotel-card {
+      flex-direction: column;
+    }
+
+    .grid-view img {
+      width: 100%;
+      height: 200px;
+    }
+
+    .grid-view .price-box {
+      width: 100%;
+      text-align: left;
+    }
+    .grid-view .hotel-header {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .grid-view .rating-box{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:3px;
+      }
+
+      .grid-view .rating-text{
+      display:flex;
+      flex-direction:row;
+      align-items:center;
+      gap:6px;
+      }
+
+      .grid-view .rating-score{
+      order:1;
+      }
+
+      .grid-view .rating-level{
+      order:2;
+      }
+    
+
+    /* review ngang*/
+    .list-view .rating-box{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:2px;
+    }
+
+    .list-view .rating-box .rating-text{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    }
+
+    .list-view .rating-score::after{
+    content:"";
+    font-size:12px;
+    margin-left:2px;
+    }
+    
+    </style>
+    
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="logo">
+          <h1 style="font-size: 30px; "><a href="Home_User.html" style="text-decoration: none; color: white;">LoudBooking.com</a></h1>
+        </div>
+        <div class="currency-contact">
+          <div class="thongbao">
+            <i class="fa fa-bell"></i>
+            <!-- Biểu tượng thông báo -->
+            <a href="thongbao.html"></i>Thông báo</a>
+          </div>
+          <div class="contact">
+            <i class="fas fa-envelope"></i>
+            <!-- Biểu tượng liên hệ -->
+            <a href="z-lienhe.html">Liên hệ</a>
+          </div>
+        </div>
+        <div class="login-section">
+          <button class="main-button" onclick="toggleMenu()">
+              <i class="fa fa-user-circle"></i> 
+              <p id="buttonusername">Tên người dùng</p>
+          </button>
+          <div id="dropdownMenu" class="dropdown-menu">
+            <button class="dropdown-button" onclick="viewAccountDetails()">Chi tiết tài khoản</button>
+              <button class="dropdown-button" onclick="logoutUser()">
+                Đăng xuất</button>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="options" >
+        <button onclick="location.href='z-uudai.html';">
+        <i class="fa-regular fa-calendar-check"></i> Sự kiện
+        </button>
+
+        <button>
+        <i class="fa fa-plane"></i> Chuyến bay
+        </button>
+
+        <button>
+        <i class="fa fa-hotel"></i> Khách sạn
+        </button>
+
+        <button>
+        <i class="fa fa-car"></i> Thuê xe
+        </button>
+
+        <button>
+        <i class="fa-solid fa-ship"></i> Du thuyền
+        </button>
+      </div>
+    </header>
+
+   <script>
+        // --- Lấy thông tin user từ localStorage ---
+        
+    </script>
+
+    <section class="search-section">
+    <div class="search-container">
+        <form class="search-form" id="searchForm">
+          <input type="text" placeholder="Nhập địa chỉ" id="searchInput" class="search-input" />
+          <input type="date" id="startDate" class="date-input" />
+          <input type="date" id="endDate" class="date-input" />
+          <div class="guest-control" id="guest-control">
+              <input type="text" placeholder="Nhập số người" class="guest-control-input" id="guestCount"/>
+          </div>
+          <button type="submit" class="search-btn">Tìm</button>
+        </form>
+    </div>
+    </section>
+
+    <div class="body1">
+      <div class="hotel-page">
+      <div class="top-bar">
+        <div class="result">
+          <b>Đà Lạt</b><br />
+          <span id="resultCount">569 nơi lưu trú được tìm thấy</span>
+        </div>
+
+        <div class="controls">
+          <select id="sortSelect">
+            <option value="ratingDesc">Đánh giá cao → thấp</option>
+            <option value="ratingAsc">Đánh giá thấp → cao</option>
+            <option value="priceDesc">Giá cao → thấp</option>
+            <option value="priceAsc">Giá thấp → cao</option>
+          </select>
+
+          <div class="view-buttons">
+            <button onclick="setView('list')">
+              <i class="fa fa-bars"></i>
+            </button>
+            <button onclick="setView('grid')"><i class="fa fa-th"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div id="hotelContainer" class="hotel-container list-view">
+        <!-- HOTEL CARD -->
+
+        <div class="hotel-card">
+          <img src="images/section1.jpg" />
+
+          <div class="hotel-info">
+            <div class="hotel-header">
+              <h3>The Apartments by The Sloane Club</h3>
+
+              <div class="rating-box">
+                <div class="rating-text">
+                  <div class="rating-level">Tuyệt vời</div>
+                  <div class="rating-score">8.9</div>
+                  </div>
+
+                  <div class="rating-count">258 đánh giá</div>
+              </div>
+            </div>
+
+            <div class="address">📍 phường 10, Đà Lạt</div>
+
+            <div class="desc">
+              Du ngoạn trên thuyền máy • Hồ nước nóng Jacuzzi
+            </div>
+          </div>
+          <div class="price-box">
+            <div class="price">81.231 VND</div>
+
+            <div class="price-range">(81k - 120k)</div>
+
+            <button class="book-btn">Chọn phòng</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    <script>
+    function setView(type) {
+      const container = document.getElementById("hotelContainer");
+
+      if (type === "grid") {
+        container.classList.remove("list-view");
+        container.classList.add("grid-view");
+      } else {
+        container.classList.remove("grid-view");
+        container.classList.add("list-view");
+      }
+    }
+  </script>
+  <script>
+    const sortSelect = document.getElementById("sortSelect");
+
+    sortSelect.addEventListener("change", function () {
+      let cards = Array.from(document.querySelectorAll(".hotel-card"));
+
+      cards.sort((a, b) => {
+        let ratingA = parseFloat(a.querySelector(".score").innerText);
+        let ratingB = parseFloat(b.querySelector(".score").innerText);
+
+        let priceA = parseInt(
+          a.querySelector(".price").innerText.replace(/\D/g, ""),
+        );
+        let priceB = parseInt(
+          b.querySelector(".price").innerText.replace(/\D/g, ""),
+        );
+
+        switch (this.value) {
+          case "ratingDesc":
+            return ratingB - ratingA;
+
+          case "ratingAsc":
+            return ratingA - ratingB;
+
+          case "priceDesc":
+            return priceB - priceA;
+
+          case "priceAsc":
+            return priceA - priceB;
+        }
+      });
+
+      const container = document.getElementById("hotelContainer");
+
+      container.innerHTML = "";
+      cards.forEach((c) => container.appendChild(c));
+    });
+  </script>
+    </div>
+    <div>
+      <p></p>
+    </div>
+</body>
+</html>

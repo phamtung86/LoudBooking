@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homestay Slider</title>
+
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f5f5f5;
+      }
+
+      /* section */
+
+      .nav3 {
+        max-width: 1200px;
+        margin: auto;
+      }
+
+      .section-title {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .section-desc {
+        color: #666;
+        margin-bottom: 20px;
+      }
+
+      /* slider */
+
+      .slider-wrapper {
+        position: relative;
+      }
+
+      /* container scroll */
+
+      .places-container {
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        scroll-padding-left: 10px;
+      }
+
+      .places-container::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* card */
+
+      .place-card {
+        min-width: 285px;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        scroll-snap-align: start;
+        transition: transform 0.9s ease;
+      }
+
+      .place-card:hover {
+        transform: translateY(-5px);
+      }
+      /* image */
+
+      .place-img {
+        position: relative;
+      }
+
+      .place-img img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .place-card,
+      .place-card:visited,
+      .place-card:hover,
+      .place-card:active {
+        text-decoration: none;
+        color: black;
+        display: block;
+      }
+      /* heart */
+
+      .heart {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      /* info */
+
+      .place-info {
+        padding: 12px;
+      }
+
+      .place-info h3 {
+        font-size: 16px;
+        margin-bottom: 5px;
+      }
+
+      .place-address {
+        font-size: 14px;
+        color: #666;
+      }
+      .location-icon {
+        color: #0071c2; /* màu xanh booking */
+        font-size: 16px;
+      }
+
+      /* rating */
+
+      .rating-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .rating-box {
+        background: #003580;
+        color: white;
+        font-weight: bold;
+        padding: 4px 7px;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+
+      .rating-text {
+        font-size: 14px;
+      }
+
+      .rating-count {
+        font-size: 13px;
+        color: #777;
+      }
+
+      /* buttons */
+
+      .prev,
+      .next {
+        position: absolute;
+        top: 40%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: none;
+        background: white;
+        font-size: 22px;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+        z-index: 10; /* thêm dòng này */
+      }
+
+      .prev {
+        left: -25px;
+      }
+
+      .next {
+        right: -25px;
+      }
+      .slider-wrapper {
+        position: relative;
+        overflow: visible;
+      }
+      .prev:disabled,
+      .next:disabled {
+        opacity: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="nav3">
+      <h2 class="section-title">Bạn vẫn quan tâm</h2>
+      <p class="section-desc">Các chỗ nghỉ được đánh giá cao</p>
+
+      <div class="slider-wrapper">
+        <button class="prev" onclick="scrollLeft()">❮</button>
+
+        <div class="places-container"></div>
+
+        <button class="next" onclick="scrollRight()">❯</button>
+      </div>
+    </div>
+
+    <script>
+      const API = "http://localhost:8080/api/hotels";
+
+      const container = document.querySelector(".places-container");
+      const prevBtn = document.querySelector(".prev");
+      const nextBtn = document.querySelector(".next");
+
+      /* lấy kích thước card thật */
+
+      function getScrollAmount() {
+        const card = document.querySelector(".place-card");
+        if (!card) return 300;
+
+        const style = window.getComputedStyle(container);
+        const gap = parseInt(style.gap) || 20;
+
+        return card.offsetWidth + gap;
+      }
+
+      /* load review */
+      function getRatingLabel(avg) {
+        let label = "";
+
+        if (avg >= 9) {
+          label = "Tuyệt vời";
+        } else if (avg >= 8 && avg <= 8.9) {
+          label = "Rất tốt";
+        } else if (avg >= 7 && avg <= 7.9) {
+          label = "Tốt";
+        } else {
+          label = "Bình thường";
+        }
+
+        return label;
+      }
+
+      /* load hotel */
+      async function loadHotels() {
+        const res = await fetch(API + "?t=" + new Date().getTime());
+        const data = await res.json();
+
+        container.innerHTML = "";
+
+        // bỏ hotel INACTIVE
+        const activeHotels = data.filter((h) => h.hotelStatus === "ACTIVE");
+        for (const h of activeHotels) {
+          const image = h.mainImage
+            ? "http://localhost:8080" + h.mainImage
+            : "https://via.placeholder.com/300";
+
+          /* lấy review */
+
+          let totalReviews = 0;
+          let avg = 0;
+
+          try {
+            const reviewRes = await fetch(
+              `http://localhost:8080/api/reviews/hotel/${h.hotelId}`,
+            );
+
+            const reviews = await reviewRes.json();
+
+            totalReviews = reviews.length;
+
+            if (totalReviews > 0) {
+              let sum = 0;
+              reviews.forEach((r) => (sum += r.rate));
+              avg = sum / totalReviews;
+            }
+          } catch (err) {
+            console.log("Không load được review", err);
+          }
+
+          const rating = avg.toFixed(1);
+          const label = getRatingLabel(avg);
+
+          const card = `
+    <a href="1detail.html?id=${h.hotelId}" class="place-card">
+
+      <div class="place-img">
+        <img src="${image}">
+        <div class="heart">♡</div>
+      </div>
+
+      <div class="place-info">
+
+        <h3>${h.hotelName}</h3>
+
+        <div class="place-address">
+          ${h.address ?? ""}
+        </div>
+
+        <div class="rating-row">
+
+          <div class="rating-box">${rating}</div>
+
+          <div>
+            <div class="rating-text">${label}</div>
+            <div class="rating-count">${totalReviews} đánh giá</div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </a>
+    `;
+
+          container.insertAdjacentHTML("beforeend", card);
+        }
+
+        updateButtons();
+      }
+    </script>
+    <script>
+      /* scroll */
+
+      function scrollRight() {
+        container.scrollBy({
+          left: getScrollAmount() * 3,
+          behavior: "smooth",
+        });
+      }
+
+      function scrollLeft() {
+        container.scrollBy({
+          left: -getScrollAmount() * 3,
+          behavior: "smooth",
+        });
+      }
+
+      /* update button */
+
+      function updateButtons() {
+        const maxScroll = container.scrollWidth - container.clientWidth;
+
+        prevBtn.disabled = container.scrollLeft <= 5;
+        nextBtn.disabled = container.scrollLeft >= maxScroll - 5;
+      }
+
+      /* events */
+
+      container.addEventListener("scroll", updateButtons);
+
+      prevBtn.addEventListener("click", scrollLeft);
+      nextBtn.addEventListener("click", scrollRight);
+
+      document.addEventListener("DOMContentLoaded", loadHotels);
+    </script>
+  </body>
+</html>
